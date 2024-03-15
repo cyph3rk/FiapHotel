@@ -17,7 +17,7 @@ import java.util.Random;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class LocalidadeTests {
+public class PredioTests {
 
     @LocalServerPort
     private int port;
@@ -26,14 +26,37 @@ public class LocalidadeTests {
     private TestRestTemplate restTemplate;
 
     @Test
-    public void salva_Localidade_SucessoTest() {
+    public void salva_Predio_SucessoTest() {
+
         String randomWord = geraPalavraRandomica(8);
         String id = cadastrandoLocalidadeSucesso(randomWord);
         Assert.assertNotEquals("Falha", id);
+
+        randomWord = geraPalavraRandomica(8);
+        String url = "http://localhost:" + port + "/predio/" + id;
+
+        String requestBody = "{\"nome\":\"" + randomWord + "\"}";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, headers);
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
+        Assert.assertEquals(HttpStatus.CREATED, response.getStatusCode());
+
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(response.getBody());
+
+            String mensagem = jsonNode.get("Messagem").asText();
+
+            Assert.assertEquals(mensagem, "Localidade CADASTRADA com sucesso.");
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
-    public void altera_Localidade_SucessoTest() {
+    public void altera_Predio_SucessoTest() {
 
         String randomWord = geraPalavraRandomica(8);
         String url = "http://localhost:" + port + "/localidade";
@@ -86,7 +109,7 @@ public class LocalidadeTests {
     }
 
     @Test
-    public void deleta_Localidade_SucessoTest() {
+    public void deleta_Predio_SucessoTest() {
 
         String randomWord = geraPalavraRandomica(8);
         String url = "http://localhost:" + port + "/Localidade";
@@ -124,7 +147,7 @@ public class LocalidadeTests {
     }
 
     @Test
-    public void pesquisa_Localidade_Por_Nome_SucessoTest() {
+    public void pesquisa_Predio_Por_Nome_SucessoTest() {
 
         String randomWord = geraPalavraRandomica(8);
         String url = "http://localhost:" + port + "/localidade";
@@ -168,7 +191,7 @@ public class LocalidadeTests {
     }
 
     @Test
-    public void pesquisa_Localidade_Por_Id_SucessoTest() {
+    public void pesquisa_Predio_Por_Id_SucessoTest() {
 
         String randomWord = geraPalavraRandomica(8);
         String url = "http://localhost:" + port + "/localidade";
@@ -246,7 +269,7 @@ public class LocalidadeTests {
     }
 
     private static String geraPalavraRandomica(int length) {
-        String allowedChars = "abcdefghijklmnopqrstuvwxyz";
+        String allowedChars = "abcdefghijklmnopqrstuvwxyz"; // caracteres permitidos
         Random random = new Random();
         StringBuilder word = new StringBuilder();
 

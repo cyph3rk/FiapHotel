@@ -17,7 +17,7 @@ import java.util.Random;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class LocalidadeTests {
+public class QuartoTests {
 
     @LocalServerPort
     private int port;
@@ -27,9 +27,32 @@ public class LocalidadeTests {
 
     @Test
     public void salva_Localidade_SucessoTest() {
+
         String randomWord = geraPalavraRandomica(8);
-        String id = cadastrandoLocalidadeSucesso(randomWord);
-        Assert.assertNotEquals("Falha", id);
+        String url = "http://localhost:" + port + "/localidade";
+
+        String requestBody = "{\"nome\":\"" + randomWord + "\"," +
+                "\"rua\":\"Nome da Rua\"," +
+                "\"cep\":\"88000-000\"," +
+                "\"cidade\":\"São José\"," +
+                "\"estado\":\"Santa Catarina\"}";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, headers);
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
+        Assert.assertEquals(HttpStatus.CREATED, response.getStatusCode());
+
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(response.getBody());
+
+            String mensagem = jsonNode.get("Messagem").asText();
+
+            Assert.assertEquals(mensagem, "Localidade CADASTRADA com sucesso.");
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -212,41 +235,8 @@ public class LocalidadeTests {
         }
     }
 
-    private String cadastrandoLocalidadeSucesso(String randomWord) {
-
-        String url = "http://localhost:" + port + "/localidade";
-
-        String requestBody = "{\"nome\":\"" + randomWord + "\"," +
-                "\"rua\":\"Nome da Rua\"," +
-                "\"cep\":\"88000-000\"," +
-                "\"cidade\":\"Nome Cidade\"," +
-                "\"estado\":\"Nome Estado\"}";
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, headers);
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
-        Assert.assertEquals(HttpStatus.CREATED, response.getStatusCode());
-
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonNode = objectMapper.readTree(response.getBody());
-
-            String mensagem = jsonNode.get("Messagem").asText();
-            String id = jsonNode.get("id").asText();
-
-            Assert.assertEquals(mensagem, "Localidade CADASTRADa com sucesso.");
-
-            return id;
-
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return  "Falha";
-        }
-    }
-
     private static String geraPalavraRandomica(int length) {
-        String allowedChars = "abcdefghijklmnopqrstuvwxyz";
+        String allowedChars = "abcdefghijklmnopqrstuvwxyz"; // caracteres permitidos
         Random random = new Random();
         StringBuilder word = new StringBuilder();
 

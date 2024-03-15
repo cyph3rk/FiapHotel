@@ -9,8 +9,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Path;
 import jakarta.validation.Validator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +24,6 @@ import java.util.Set;
 @RequestMapping("/localidade")
 public class LocalidadeController {
 
-    private static final Logger logger = LoggerFactory.getLogger(LocalidadeController.class);
-
     private final IlocalidadeRepositorio localidadeRepositorio;
 
     private final Validator validator;
@@ -35,7 +31,7 @@ public class LocalidadeController {
     private final LocalidadeFacade localidadeFacade;
 
     @Autowired
-    public EnderecoController(IlocalidadeRepositorio localidadeRepositorio, Validator validator, LocalidadeFacade localidadeFacade) {
+    public LocalidadeController(IlocalidadeRepositorio localidadeRepositorio, Validator validator, LocalidadeFacade localidadeFacade) {
         this.localidadeRepositorio = localidadeRepositorio;
         this.validator = validator;
         this.localidadeFacade = localidadeFacade;
@@ -49,7 +45,7 @@ public class LocalidadeController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> setLocalidade(@RequestBody LocalidadeForm localidadeForm) {
+    public ResponseEntity<Object> salva(@RequestBody LocalidadeForm localidadeForm) {
 
         Map<Path, String> violacoesToMap = validar(localidadeForm);
 
@@ -80,7 +76,7 @@ public class LocalidadeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getLocalidadePorId(@PathVariable Long id) {
+    public ResponseEntity<Object> buscaPorId(@PathVariable Long id) {
         Optional<LocalidadeDto> localidadeDto = localidadeFacade.buscarPorId(id);
 
         boolean existeRegistro = localidadeDto.isPresent();
@@ -91,7 +87,7 @@ public class LocalidadeController {
     }
 
     @GetMapping("/rua/{nome}")
-    public ResponseEntity<Object> getLocalidadePorNome(@PathVariable String nome) {
+    public ResponseEntity<Object> buscaPorNome(@PathVariable String nome) {
 
         List<LocalidadeDto> listaLocalidadeDto = localidadeFacade.buscarPorNome(nome);
 
@@ -102,7 +98,7 @@ public class LocalidadeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> delLocalidadePorId(@PathVariable Long id) {
+    public ResponseEntity<Object> apagaPorId(@PathVariable Long id) {
 
         Optional<LocalidadeDto> localidadeDto = localidadeFacade.buscarPorId(id);
 
@@ -116,7 +112,7 @@ public class LocalidadeController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> alteraLocalidadePorId(@PathVariable Long id, @RequestBody LocalidadeForm localidadeForm) {
+    public ResponseEntity<Object> alteraPorId(@PathVariable Long id, @RequestBody LocalidadeForm localidadeForm) {
         Map<Path, String> violacoesToMap = validar(localidadeForm);
 
         if (!violacoesToMap.isEmpty()) {

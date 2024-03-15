@@ -16,7 +16,7 @@ public class QuartoForm {
 
     @JsonProperty
     @NotBlank(message = "Campo PESSOA é obrigatorio")
-    private String pessoa;
+    private String pessoas;
 
     @JsonProperty
     @NotBlank(message = "Campo CAMAS é obrigatorio")
@@ -35,7 +35,7 @@ public class QuartoForm {
     private String valor;
 
     public QuartoDto toQuartoDto() {
-        return new QuartoDto(tipo, pessoa, camas, moveis, banheiro, valor);
+        return new QuartoDto(tipo, pessoas, camas, moveis, banheiro, valor);
     }
 
 }

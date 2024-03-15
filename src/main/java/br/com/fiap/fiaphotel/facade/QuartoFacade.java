@@ -101,7 +101,6 @@ public class QuartoFacade {
         Predio predio = new Predio();
         predio.setId(quartoDto_new.getPredioDto().getId());
         predio.setNome(quartoDto_new.getPredioDto().getNome());
-
         quarto.setPredio(predio);
 
         quartoRepositorio.save(quarto);

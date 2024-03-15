@@ -127,7 +127,7 @@ public class QuartoController {
         }
 
         predioFacade.remove(id);
-        return ResponseEntity.ok("{\"Mensagem\": \"Quarto DELETADA com sucesso.\"}");
+        return ResponseEntity.ok("{\"Mensagem\": \"Quarto DELETADO com sucesso.\"}");
     }
 
     @PutMapping("/{id}")

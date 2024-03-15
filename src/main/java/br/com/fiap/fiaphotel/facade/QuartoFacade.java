@@ -1,11 +1,12 @@
 package br.com.fiap.fiaphotel.facade;
 
-import br.com.fiap.fiaphotel.dominio.Localidade;
-import br.com.fiap.fiaphotel.dto.LocalidadeDto;
-import br.com.fiap.fiaphotel.repositorio.IlocalidadeRepositorio;
+import br.com.fiap.fiaphotel.dominio.Predio;
+import br.com.fiap.fiaphotel.dominio.Quarto;
+import br.com.fiap.fiaphotel.dto.PredioDto;
+import br.com.fiap.fiaphotel.dto.QuartoDto;
+import br.com.fiap.fiaphotel.repositorio.IPredioRepositorio;
+import br.com.fiap.fiaphotel.repositorio.IQuartoRepositorio;
 import jakarta.persistence.EntityNotFoundException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,91 +17,116 @@ import java.util.stream.Collectors;
 @Service
 public class QuartoFacade {
 
+    private final IQuartoRepositorio quartoRepositorio;
 
-    private static final Logger logger = LoggerFactory.getLogger(QuartoFacade.class);
-
-    private final IlocalidadeRepositorio localidadeRepositorio;
+    private final IPredioRepositorio predioRepositorio;
 
     @Autowired
-    public QuartoFacade(IlocalidadeRepositorio localidadeRepositorio) {
-        this.localidadeRepositorio = localidadeRepositorio;
+    public QuartoFacade(IQuartoRepositorio quartoRepositorio, IPredioRepositorio predioRepositorio) {
+        this.quartoRepositorio = quartoRepositorio;
+        this.predioRepositorio = predioRepositorio;
     }
 
-    public Long salvar(LocalidadeDto localidadeDto) {
-        List<LocalidadeDto> encontrado = buscarPorNome(localidadeDto.getNome());
+    public Long salvar(QuartoDto quartoDto) {
+        List<QuartoDto> encontrado = buscarPorNome(quartoDto.getTipo());
         if (encontrado.size() >= 1) {
             return -1L;
         }
 
-        Localidade localidade = new Localidade();
-        localidade.setNome(localidadeDto.getNome());
-        localidade.setRua(localidadeDto.getRua());
-        localidade.setCep(localidadeDto.getCep());
-        localidade.setCidade(localidadeDto.getCidade());
-        localidade.setEstado(localidadeDto.getEstado());
-        localidadeRepositorio.save(localidade);
+        Quarto quarto = new Quarto();
+        quarto.setTipo(quartoDto.getTipo());
+        quarto.setPessoas(quartoDto.getPessoas());
+        quarto.setCamas(quartoDto.getCamas());
+        quarto.setMoveis(quartoDto.getMoveis());
+        quarto.setBanheiro(quartoDto.getBanheiro());
+        quarto.setValor(quartoDto.getValor());
 
-        return localidade.getId();
+        Predio predio = new Predio();
+        predio.setId(quartoDto.getPredioDto().getId());
+        predio.setNome(quartoDto.getPredioDto().getNome());
+        quarto.setPredio(predio);
+
+        quartoRepositorio.save(quarto);
+
+        return quarto.getId();
     }
 
-    public List<LocalidadeDto> buscarPorNome(String nome) {
-        List<Localidade> listaLocalidade = localidadeRepositorio.findByNome(nome);
+    public List<QuartoDto> buscarPorNome(String nome) {
+        List<Quarto> listaQuarto = quartoRepositorio.findByNome(nome);
 
-        return listaLocalidade.stream()
+        return listaQuarto.stream()
                 .map(this::converter).collect(Collectors.toList());
     }
 
-    public Optional<LocalidadeDto> buscarPorId(Long id) {
+    public Optional<QuartoDto> buscarPorId(Long id) {
 
         try {
-            Localidade endereco = localidadeRepositorio.getReferenceById(id);
+            Quarto quarto = quartoRepositorio.getReferenceById(id);
 
-            LocalidadeDto localidadeDto = new LocalidadeDto();
-            localidadeDto.setId(endereco.getId());
-            localidadeDto.setNome(endereco.getNome());
-            localidadeDto.setRua(endereco.getRua());
-            localidadeDto.setCep(endereco.getCep());
-            localidadeDto.setCidade(endereco.getCidade());
-            localidadeDto.setEstado(endereco.getEstado());
+            QuartoDto quartoDto = new QuartoDto();
+            quartoDto.setId(quarto.getId());
+            quartoDto.setTipo(quarto.getTipo());
+            quartoDto.setPessoas(quarto.getPessoas());
+            quartoDto.setCamas(quarto.getCamas());
+            quartoDto.setMoveis(quarto.getMoveis());
+            quartoDto.setBanheiro(quarto.getBanheiro());
+            quartoDto.setValor(quarto.getValor());
 
-            return Optional.of(localidadeDto);
+            PredioDto predioDto = new PredioDto();
+            predioDto.setId(quarto.getPredio().getId());
+            predioDto.setNome(quarto.getPredio().getNome());
+
+            return Optional.of(quartoDto);
         } catch (EntityNotFoundException ex) {
-            logger.info("LocalidadeFacade - buscarPorId Id: " + id + (" Não cadastrado"));
             return Optional.empty();
         }
     }
 
     public void remove(Long id) {
         //Todo: Implementar a verificação se cadastro existe antes de deletar
-        localidadeRepositorio.deleteById(id);
+        quartoRepositorio.deleteById(id);
     }
 
-    public void altera(LocalidadeDto localidadeDto_new) {
+    public void altera(QuartoDto quartoDto_new) {
         //TODO: Resolver o problema de alterar o nome para um que ja existe quebrando a regra de duplicidade
-        Localidade localidade = localidadeRepositorio.getReferenceById(localidadeDto_new.getId());
-        localidade.setId(localidadeDto_new.getId());
-        localidade.setNome(localidadeDto_new.getNome());
-        localidade.setRua(localidadeDto_new.getRua());
-        localidade.setCep(localidadeDto_new.getCep());
-        localidade.setCidade(localidadeDto_new.getCidade());
-        localidade.setEstado(localidadeDto_new.getEstado());
+        Quarto quarto = quartoRepositorio.getReferenceById(quartoDto_new.getId());
+        quarto.setId(quartoDto_new.getId());
+        quarto.setTipo(quartoDto_new.getTipo());
+        quarto.setPessoas(quartoDto_new.getPessoas());
+        quarto.setCamas(quartoDto_new.getCamas());
+        quarto.setMoveis(quartoDto_new.getMoveis());
+        quarto.setBanheiro(quartoDto_new.getBanheiro());
+        quarto.setValor(quartoDto_new.getValor());
 
-        localidadeRepositorio.save(localidade);
+        Predio predio = new Predio();
+        predio.setId(quartoDto_new.getPredioDto().getId());
+        predio.setNome(quartoDto_new.getPredioDto().getNome());
+
+        quarto.setPredio(predio);
+
+        quartoRepositorio.save(quarto);
     }
 
-    private LocalidadeDto converter (Localidade localidade) {
-        LocalidadeDto result = new LocalidadeDto();
-        result.setId(localidade.getId());
-        result.setNome(localidade.getNome());
-        result.setRua(localidade.getRua());
-        result.setCep(localidade.getCep());
-        result.setCidade(localidade.getCidade());
-        result.setEstado(localidade.getEstado());
-        return result;
+    private QuartoDto converter (Quarto quarto) {
+        QuartoDto quartoDto = new QuartoDto();
+        quartoDto.setId(quarto.getId());
+        quartoDto.setTipo(quarto.getTipo());
+        quartoDto.setPessoas(quarto.getPessoas());
+        quartoDto.setCamas(quarto.getCamas());
+        quartoDto.setMoveis(quarto.getMoveis());
+        quartoDto.setBanheiro(quarto.getBanheiro());
+        quartoDto.setValor(quarto.getValor());
+
+        PredioDto predioDto = new PredioDto();
+        predioDto.setId(quarto.getPredio().getId());
+        predioDto.setNome(quarto.getPredio().getNome());
+        quartoDto.setPredioDto(predioDto);
+
+        return quartoDto;
     }
 
-    public List<LocalidadeDto> getAll() {
-        return localidadeRepositorio
+    public List<QuartoDto> getAll() {
+        return quartoRepositorio
                 .findAll()
                 .stream()
                 .map(this::converter).collect(Collectors.toList());

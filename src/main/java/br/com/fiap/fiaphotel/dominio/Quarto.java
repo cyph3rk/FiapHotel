@@ -21,7 +21,7 @@ public class Quarto {
     private String tipo;
 
     @JsonProperty
-    private String pessoa;
+    private String pessoas;
 
     @JsonProperty
     private String camas;
@@ -39,9 +39,9 @@ public class Quarto {
     @JoinColumn(name = "id_predio", nullable = false)
     private Predio predio;
 
-    public Quarto(String tipo, String pessoa, String camas, String moveis, String banheiro, String valor, Predio predio) {
+    public Quarto(String tipo, String pessoas, String camas, String moveis, String banheiro, String valor, Predio predio) {
         this.tipo = tipo;
-        this.pessoa = pessoa;
+        this.pessoas = pessoas;
         this.camas = camas;
         this.moveis = moveis;
         this.banheiro = banheiro;

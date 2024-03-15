@@ -1,6 +1,5 @@
 package br.com.fiap.fiaphotel.facade;
 
-import br.com.fiap.fiaphotel.dominio.Localidade;
 import br.com.fiap.fiaphotel.dominio.Predio;
 import br.com.fiap.fiaphotel.dto.LocalidadeDto;
 import br.com.fiap.fiaphotel.dto.PredioDto;

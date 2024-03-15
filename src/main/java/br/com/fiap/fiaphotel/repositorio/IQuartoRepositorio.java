@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface IQuartoRepositorio extends JpaRepository<Quarto, Long> {
 
-    List<Quarto> findByNome(String nome);
+    List<Quarto> findByTipo(String tipo);
 
 }

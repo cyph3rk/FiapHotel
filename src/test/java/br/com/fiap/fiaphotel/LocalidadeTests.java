@@ -17,7 +17,7 @@ import java.util.Random;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class LocalidadeTests {
+class LocalidadeTests {
 
     @LocalServerPort
     private int port;
@@ -57,7 +57,7 @@ public class LocalidadeTests {
             String mensagem = jsonNode.get("Messagem").asText();
             String id = jsonNode.get("id").asText();
 
-            Assert.assertEquals(mensagem, "Endereco CADASTRADO com sucesso.");
+            Assert.assertEquals(mensagem, "Localidade CADASTRADA com sucesso.");
 
             url = "http://localhost:" + port + "/localidade/" + id;
 
@@ -89,7 +89,7 @@ public class LocalidadeTests {
     public void deleta_Localidade_SucessoTest() {
 
         String randomWord = geraPalavraRandomica(8);
-        String url = "http://localhost:" + port + "/Localidade";
+        String url = "http://localhost:" + port + "/localidade";
 
         String requestBody = "{\"nome\":\"" + randomWord + "\"," +
                 "\"rua\":\"Nome da Rua\"," +
@@ -112,11 +112,11 @@ public class LocalidadeTests {
 
             Assert.assertEquals(mensagem, "Localidade CADASTRADA com sucesso.");
 
-            url = "http://localhost:" + port + "/Localidade/" + id;
+            url = "http://localhost:" + port + "/localidade/" + id;
             requestEntity = new HttpEntity<>(headers);
             response = restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, String.class);
             Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-            Assert.assertTrue(response.getBody() != null && response.getBody().contains("{\"Mensagem\": \"Localidade DELETADO com sucesso.\"}"));
+            Assert.assertTrue(response.getBody() != null && response.getBody().contains("{\"Mensagem\": \"Localidade DELETADA com sucesso.\"}"));
 
         } catch (JsonProcessingException e) {
             e.printStackTrace();
@@ -150,11 +150,12 @@ public class LocalidadeTests {
 
             Assert.assertEquals(mensagem, "Localidade CADASTRADA com sucesso.");
 
-            url = "http://localhost:" + port + "/localidade/" + randomWord;
+            url = "http://localhost:" + port + "/localidade/nome/" + randomWord;
             requestEntity = new HttpEntity<>(headers);
             response = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
 
-            requestBody = "{\"nome\":\"" + randomWord + "\"," +
+            requestBody = "{\"id\":" + id + "," +
+                    "\"nome\":\"" + randomWord + "\"," +
                     "\"rua\":\"Nome da Rua\"," +
                     "\"cep\":\"88000-000\"," +
                     "\"cidade\":\"São José\"," +
@@ -235,7 +236,7 @@ public class LocalidadeTests {
             String mensagem = jsonNode.get("Messagem").asText();
             String id = jsonNode.get("id").asText();
 
-            Assert.assertEquals(mensagem, "Localidade CADASTRADa com sucesso.");
+            Assert.assertEquals(mensagem, "Localidade CADASTRADA com sucesso.");
 
             return id;
 

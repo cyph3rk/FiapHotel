@@ -28,7 +28,7 @@ public class QuartoFacade {
     }
 
     public Long salvar(QuartoDto quartoDto) {
-        List<QuartoDto> encontrado = buscarPorNome(quartoDto.getTipo());
+        List<QuartoDto> encontrado = buscarPorTipo(quartoDto.getTipo());
         if (encontrado.size() >= 1) {
             return -1L;
         }
@@ -51,8 +51,8 @@ public class QuartoFacade {
         return quarto.getId();
     }
 
-    public List<QuartoDto> buscarPorNome(String nome) {
-        List<Quarto> listaQuarto = quartoRepositorio.findByNome(nome);
+    public List<QuartoDto> buscarPorTipo(String tipo) {
+        List<Quarto> listaQuarto = quartoRepositorio.findByTipo(tipo);
 
         return listaQuarto.stream()
                 .map(this::converter).collect(Collectors.toList());

@@ -86,7 +86,7 @@ public class LocalidadeController {
         return ResponseEntity.status(HttpStatus.OK).body(localidadeDto);
     }
 
-    @GetMapping("/rua/{nome}")
+    @GetMapping("/nome/{nome}")
     public ResponseEntity<Object> buscaPorNome(@PathVariable String nome) {
 
         List<LocalidadeDto> listaLocalidadeDto = localidadeFacade.buscarPorNome(nome);

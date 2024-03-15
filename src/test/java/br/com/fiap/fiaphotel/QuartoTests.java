@@ -17,7 +17,7 @@ import java.util.Random;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class QuartoTests {
+class QuartoTests {
 
     @LocalServerPort
     private int port;

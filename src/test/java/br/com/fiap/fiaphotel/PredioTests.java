@@ -17,7 +17,7 @@ import java.util.Random;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class PredioTests {
+class PredioTests {
 
     @LocalServerPort
     private int port;
@@ -29,11 +29,11 @@ public class PredioTests {
     public void salva_Predio_SucessoTest() {
 
         String randomWord = geraPalavraRandomica(8);
-        String id = cadastrandoLocalidadeSucesso(randomWord);
-        Assert.assertNotEquals("Falha", id);
+        String idLocalidade = cadastrandoLocalidadeSucesso(randomWord);
+        Assert.assertNotEquals("Falha", idLocalidade);
 
         randomWord = geraPalavraRandomica(8);
-        String url = "http://localhost:" + port + "/predio/" + id;
+        String url = "http://localhost:" + port + "/predio/" + idLocalidade;
 
         String requestBody = "{\"nome\":\"" + randomWord + "\"}";
 
@@ -49,7 +49,7 @@ public class PredioTests {
 
             String mensagem = jsonNode.get("Messagem").asText();
 
-            Assert.assertEquals(mensagem, "Localidade CADASTRADA com sucesso.");
+            Assert.assertEquals(mensagem, "Predio CADASTRADO com sucesso.");
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -59,13 +59,13 @@ public class PredioTests {
     public void altera_Predio_SucessoTest() {
 
         String randomWord = geraPalavraRandomica(8);
-        String url = "http://localhost:" + port + "/localidade";
+        String idLocalidade = cadastrandoLocalidadeSucesso(randomWord);
+        Assert.assertNotEquals("Falha", idLocalidade);
 
-        String requestBody = "{\"nome\":\"" + randomWord + "\"," +
-                "\"rua\":\"Nome da Rua\"," +
-                "\"cep\":\"88000-000\"," +
-                "\"cidade\":\"São José\"," +
-                "\"estado\":\"Santa Catarina\"}";
+        randomWord = geraPalavraRandomica(8);
+        String url = "http://localhost:" + port + "/predio/" + idLocalidade;
+
+        String requestBody = "{\"nome\":\"" + randomWord + "\"}";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -80,45 +80,38 @@ public class PredioTests {
             String mensagem = jsonNode.get("Messagem").asText();
             String id = jsonNode.get("id").asText();
 
-            Assert.assertEquals(mensagem, "Endereco CADASTRADO com sucesso.");
+            Assert.assertEquals(mensagem, "Predio CADASTRADO com sucesso.");
 
-            url = "http://localhost:" + port + "/localidade/" + id;
+            url = "http://localhost:" + port + "/predio/" + id;
 
-            requestBody = "{\"nome\":\"" + randomWord + "\"," +
-                    "\"rua\":\"Novo Nome da Rua\"," +
-                    "\"cep\":\"88000-000\"," +
-                    "\"cidade\":\"Nova Cidae\"," +
-                    "\"estado\":\"Novo Estado\"}";
-
+            requestBody = "{\"nome\":\"Novo nome 1\"}";
 
             requestEntity = new HttpEntity<>(requestBody, headers);
             response = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, String.class);
 
             String resp = "{\"id\":"+ id +"," +
-                    "\"nome\":\"" + randomWord + "\"," +
-                    "\"rua\":\"Novo Nome da Rua\"," +
-                    "\"cep\":\"88000-000\"," +
-                    "\"cidade\":\"Nova Cidae\"," +
-                    "\"estado\":\"Novo Estado\"}";
+                    "\"nome\":\"Novo nome 1\"," +
+                    "\"localidadeDto\":null}";
 
             Assert.assertTrue(response.getBody() != null && response.getBody().contains(resp));
 
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
+
     }
 
     @Test
     public void deleta_Predio_SucessoTest() {
 
         String randomWord = geraPalavraRandomica(8);
-        String url = "http://localhost:" + port + "/Localidade";
+        String idLocalidade = cadastrandoLocalidadeSucesso(randomWord);
+        Assert.assertNotEquals("Falha", idLocalidade);
 
-        String requestBody = "{\"nome\":\"" + randomWord + "\"," +
-                "\"rua\":\"Nome da Rua\"," +
-                "\"cep\":\"88000-000\"," +
-                "\"cidade\":\"São José\"," +
-                "\"estado\":\"Santa Catarina\"}";
+        randomWord = geraPalavraRandomica(8);
+        String url = "http://localhost:" + port + "/predio/" + idLocalidade;
+
+        String requestBody = "{\"nome\":\"" + randomWord + "\"}";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -133,13 +126,13 @@ public class PredioTests {
             String mensagem = jsonNode.get("Messagem").asText();
             String id = jsonNode.get("id").asText();
 
-            Assert.assertEquals(mensagem, "Localidade CADASTRADA com sucesso.");
+            Assert.assertEquals(mensagem, "Predio CADASTRADO com sucesso.");
 
-            url = "http://localhost:" + port + "/Localidade/" + id;
+            url = "http://localhost:" + port + "/predio/" + id;
             requestEntity = new HttpEntity<>(headers);
             response = restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, String.class);
             Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-            Assert.assertTrue(response.getBody() != null && response.getBody().contains("{\"Mensagem\": \"Localidade DELETADO com sucesso.\"}"));
+            Assert.assertTrue(response.getBody() != null && response.getBody().contains("{\"Mensagem\": \"Predio DELETADO com sucesso.\"}"));
 
         } catch (JsonProcessingException e) {
             e.printStackTrace();
@@ -217,7 +210,7 @@ public class PredioTests {
 
             Assert.assertEquals(mensagem, "Localidade CADASTRADA com sucesso.");
 
-            url = "http://localhost:" + port + "/localidade/" + id;
+            url = "http://localhost:" + port + "/predio/" + id;
             requestEntity = new HttpEntity<>(headers);
             response = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
 
@@ -258,7 +251,7 @@ public class PredioTests {
             String mensagem = jsonNode.get("Messagem").asText();
             String id = jsonNode.get("id").asText();
 
-            Assert.assertEquals(mensagem, "Localidade CADASTRADa com sucesso.");
+            Assert.assertEquals(mensagem, "Localidade CADASTRADA com sucesso.");
 
             return id;
 

@@ -142,14 +142,14 @@ class PredioTests {
     @Test
     public void pesquisa_Predio_Por_Nome_SucessoTest() {
 
-        String randomWord = geraPalavraRandomica(8);
-        String url = "http://localhost:" + port + "/localidade";
+        String nomeLocalidade = geraPalavraRandomica(8);
+        String idLocalidade = cadastrandoLocalidadeSucesso(nomeLocalidade);
+        Assert.assertNotEquals("Falha", idLocalidade);
 
-        String requestBody = "{\"nome\":\"" + randomWord + "\"," +
-                "\"rua\":\"Nome da Rua\"," +
-                "\"cep\":\"88000-000\"," +
-                "\"cidade\":\"São José\"," +
-                "\"estado\":\"Santa Catarina\"}";
+        String randomWord = geraPalavraRandomica(8);
+        String url = "http://localhost:" + port + "/predio/" + idLocalidade;
+
+        String requestBody = "{\"nome\":\"" + randomWord + "\"}";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -164,19 +164,22 @@ class PredioTests {
             String mensagem = jsonNode.get("Messagem").asText();
             String id = jsonNode.get("id").asText();
 
-            Assert.assertEquals(mensagem, "Localidade CADASTRADA com sucesso.");
+            Assert.assertEquals(mensagem, "Predio CADASTRADO com sucesso.");
 
-            url = "http://localhost:" + port + "/localidade/" + randomWord;
+            url = "http://localhost:" + port + "/predio/nome/" + randomWord;
             requestEntity = new HttpEntity<>(headers);
             response = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
 
-            requestBody = "{\"nome\":\"" + randomWord + "\"," +
+            String resp = "{\"id\":"+ id +"," +
+                    "\"nome\":\"" + randomWord + "\"," +
+                    "\"localidadeDto\":{\"id\":" + idLocalidade + "," +
+                    "\"nome\":\"" + nomeLocalidade + "\"," +
                     "\"rua\":\"Nome da Rua\"," +
-                    "\"cep\":\"88000-000\"," +
-                    "\"cidade\":\"São José\"," +
-                    "\"estado\":\"Santa Catarina\"}";
+                    "\"cep\":null," +
+                    "\"cidade\":\"Nome Cidade\"," +
+                    "\"estado\":\"Nome Estado\"}";
 
-            Assert.assertTrue(response.getBody() != null && response.getBody().contains(requestBody));
+            Assert.assertTrue(response.getBody() != null && response.getBody().contains(resp));
 
         } catch (JsonProcessingException e) {
             e.printStackTrace();
@@ -186,14 +189,14 @@ class PredioTests {
     @Test
     public void pesquisa_Predio_Por_Id_SucessoTest() {
 
-        String randomWord = geraPalavraRandomica(8);
-        String url = "http://localhost:" + port + "/localidade";
+        String nomeLocalidade = geraPalavraRandomica(8);
+        String idLocalidade = cadastrandoLocalidadeSucesso(nomeLocalidade);
+        Assert.assertNotEquals("Falha", idLocalidade);
 
-        String requestBody = "{\"nome\":\"" + randomWord + "\"," +
-                "\"rua\":\"Nome da Rua\"," +
-                "\"cep\":\"88000-000\"," +
-                "\"cidade\":\"São José\"," +
-                "\"estado\":\"Santa Catarina\"}";
+        String randomWord = geraPalavraRandomica(8);
+        String url = "http://localhost:" + port + "/predio/" + idLocalidade;
+
+        String requestBody = "{\"nome\":\"" + randomWord + "\"}";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -208,7 +211,7 @@ class PredioTests {
             String mensagem = jsonNode.get("Messagem").asText();
             String id = jsonNode.get("id").asText();
 
-            Assert.assertEquals(mensagem, "Localidade CADASTRADA com sucesso.");
+            Assert.assertEquals(mensagem, "Predio CADASTRADO com sucesso.");
 
             url = "http://localhost:" + port + "/predio/" + id;
             requestEntity = new HttpEntity<>(headers);
@@ -216,10 +219,12 @@ class PredioTests {
 
             String resp = "{\"id\":"+ id +"," +
                     "\"nome\":\"" + randomWord + "\"," +
+                    "\"localidadeDto\":{\"id\":" + idLocalidade + "," +
+                    "\"nome\":\"" + nomeLocalidade + "\"," +
                     "\"rua\":\"Nome da Rua\"," +
-                    "\"cep\":\"88000-000\"," +
-                    "\"cidade\":\"São José\"," +
-                    "\"estado\":\"Santa Catarina\"}";
+                    "\"cep\":null," +
+                    "\"cidade\":\"Nome Cidade\"," +
+                    "\"estado\":\"Nome Estado\"}}";
 
             Assert.assertTrue(response.getBody() != null && response.getBody().contains(resp));
 

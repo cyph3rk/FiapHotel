@@ -61,10 +61,10 @@ public class ItemController {
         ItemDto itemDto = itemForm.toItemDto();
         Long resp = itemFacade.salvar(itemDto);
         if ( resp == -1) {
-            return ResponseEntity.badRequest().body("{\"Erro\": \"Itens JÁ cadastrado.\"}");
+            return ResponseEntity.badRequest().body("{\"Erro\": \"Item JÁ cadastrado.\"}");
         }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("{\"Mensagem\": \"Itens CADASTRADA com sucesso.\", " +
+        return ResponseEntity.status(HttpStatus.CREATED).body("{\"Mensagem\": \"Item CADASTRADO com sucesso.\", " +
                 "\"id\": \"" + resp +"\"}");
     }
 
@@ -86,7 +86,7 @@ public class ItemController {
 
         boolean existeRegistro = itemDto.isPresent();
         if (!existeRegistro) {
-            return ResponseEntity.badRequest().body("{\"Erro\": \"Itens NÃO cadastrada.\"}");
+            return ResponseEntity.badRequest().body("{\"Erro\": \"Item NÃO cadastrado.\"}");
         }
         return ResponseEntity.status(HttpStatus.OK).body(itemDto);
     }
@@ -97,7 +97,7 @@ public class ItemController {
         List<ItemDto> listaItemDto = itemFacade.buscarPorNome(nome);
 
         if (listaItemDto.size() == 0) {
-            return ResponseEntity.badRequest().body("{\"Erro\": \"Itens NÃO cadastrada.\"}");
+            return ResponseEntity.badRequest().body("{\"Erro\": \"Item NÃO cadastrado.\"}");
         }
         return ResponseEntity.status(HttpStatus.OK).body(listaItemDto);
     }
@@ -109,11 +109,11 @@ public class ItemController {
 
         boolean existeRegistro = itemDto.isPresent();
         if (!existeRegistro) {
-            return ResponseEntity.badRequest().body("{\"Erro\": \"Itens NÃO cadastrada.\"}");
+            return ResponseEntity.badRequest().body("{\"Erro\": \"Item NÃO cadastrado.\"}");
         }
 
         itemFacade.remove(id);
-        return ResponseEntity.ok("{\"Mensagem\": \"Itens DELETADA com sucesso.\"}");
+        return ResponseEntity.ok("{\"Mensagem\": \"Item DELETADO com sucesso.\"}");
     }
 
     @PutMapping("/{id}")
@@ -128,7 +128,7 @@ public class ItemController {
 
         boolean existeRegistro = itemDto_old.isPresent();
         if (!existeRegistro) {
-            return ResponseEntity.badRequest().body("{\"Erro\": \"Itens NÃO cadastrado.\"}");
+            return ResponseEntity.badRequest().body("{\"Erro\": \"Item NÃO cadastrado.\"}");
         }
 
         ItemDto itemDto = itemForm.toItemDto();

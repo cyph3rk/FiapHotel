@@ -72,7 +72,7 @@ class ItemTests {
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, String.class);
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        Assert.assertTrue(response.getBody() != null && response.getBody().contains("{\"Mensagem\": \"Itens DELETADA com sucesso.\"}"));
+        Assert.assertTrue(response.getBody() != null && response.getBody().contains("{\"Mensagem\": \"Item DELETADO com sucesso.\"}"));
 
     }
 
@@ -147,7 +147,7 @@ class ItemTests {
             String mensagem = jsonNode.get("Mensagem").asText();
             String id = jsonNode.get("id").asText();
 
-            Assert.assertEquals(mensagem, "Cliente CADASTRADO com sucesso.");
+            Assert.assertEquals(mensagem, "Item CADASTRADO com sucesso.");
 
             return id;
 

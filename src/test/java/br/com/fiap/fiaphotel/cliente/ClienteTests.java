@@ -1,4 +1,4 @@
-package br.com.fiap.fiaphotel.servicos;
+package br.com.fiap.fiaphotel.cliente;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -17,7 +17,7 @@ import java.util.Random;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ItemTests {
+class ClienteTests {
 
     @LocalServerPort
     private int port;
@@ -26,23 +26,28 @@ class ItemTests {
     private TestRestTemplate restTemplate;
 
     @Test
-    public void salva_Item_SucessoTest() {
+    public void salva_Cliente_SucessoTest() {
         String randomWord = geraPalavraRandomica(8);
-        String id = cadastrandoItemSucesso(randomWord);
+        String id = cadastrandoClienteSucesso(randomWord);
         Assert.assertNotEquals("Falha", id);
     }
 
     @Test
-    public void altera_Item_SucessoTest() {
+    public void altera_Cliente_SucessoTest() {
 
         String randomWord = geraPalavraRandomica(8);
-        String id = cadastrandoItemSucesso(randomWord);
+        String id = cadastrandoClienteSucesso(randomWord);
         Assert.assertNotEquals("Falha", id);
 
-        String url = "http://localhost:" + port + "/item/" + id;
+        String url = "http://localhost:" + port + "/cliente/" + id;
 
-        String requestBody = "{\"nome\":\"" + randomWord + "\"," +
-                "\"valor\":\"200,00\"}";
+        String requestBody = "{\"pais\":\"Brasil\"," +
+                "\"cpf\":\"999.999.999-99\"," +
+                "\"passaporte\":\"998998998\"," +
+                "\"nome\":\"" + randomWord + "\"," +
+                "\"datanascimento\":\"Brasil\"," +
+                "\"telefone\":\"55-48-98888.8888\"," +
+                "\"email\":\"email@host.com.br\"}";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -51,20 +56,25 @@ class ItemTests {
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
 
         String resp = "{\"id\":"+ id +"," +
-                    "\"nome\":\"" + randomWord + "\"," +
-                    "\"valor\":\"200,00\"}";
+                "\"pais\":\"Brasil\"," +
+                "\"cpf\":\"999.999.999-99\"," +
+                "\"passaporte\":\"998998998\"," +
+                "\"nome\":\"" + randomWord + "\"," +
+                "\"datanascimento\":\"Brasil\"," +
+                "\"telefone\":\"55-48-98888.8888\"," +
+                "\"email\":\"email@host.com.br\"}";
 
         Assert.assertTrue(response.getBody() != null && response.getBody().contains(resp));
     }
 
     @Test
-    public void deleta_Item_SucessoTest() {
+    public void deleta_Cliente_SucessoTest() {
 
         String randomWord = geraPalavraRandomica(8);
-        String id = cadastrandoItemSucesso(randomWord);
+        String id = cadastrandoClienteSucesso(randomWord);
         Assert.assertNotEquals("Falha", id);
 
-        String url = "http://localhost:" + port + "/item/" + id;
+        String url = "http://localhost:" + port + "/cliente/" + id;
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -72,18 +82,18 @@ class ItemTests {
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, String.class);
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        Assert.assertTrue(response.getBody() != null && response.getBody().contains("{\"Mensagem\": \"Itens DELETADA com sucesso.\"}"));
+        Assert.assertTrue(response.getBody() != null && response.getBody().contains("{\"Mensagem\": \"Cliente DELETADO com sucesso.\"}"));
 
     }
 
     @Test
-    public void pesquisa_Item_Por_Nome_SucessoTest() {
+    public void pesquisa_Cliente_Por_Nome_SucessoTest() {
 
         String randomWord = geraPalavraRandomica(8);
-        String id = cadastrandoItemSucesso(randomWord);
+        String id = cadastrandoClienteSucesso(randomWord);
         Assert.assertNotEquals("Falha", id);
 
-        String url = "http://localhost:" + port + "/item/nome/" + randomWord;
+        String url = "http://localhost:" + port + "/cliente/nome/" + randomWord;
 
 
         HttpHeaders headers = new HttpHeaders();
@@ -94,45 +104,59 @@ class ItemTests {
 
 
         String resp = "{\"id\":" + id + "," +
-                    "\"nome\":\"" + randomWord + "\"," +
-                    "\"valor\":\"135,00\"}";
-
-            Assert.assertTrue(response.getBody() != null && response.getBody().contains(resp));
-
-    }
-
-    @Test
-    public void pesquisa_Item_Por_Id_SucessoTest() {
-
-        String randomWord = geraPalavraRandomica(8);
-        String id = cadastrandoItemSucesso(randomWord);
-        Assert.assertNotEquals("Falha", id);
-
-        String url = "http://localhost:" + port + "/item/" + id;
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
-        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-
-
-        String resp = "{\"id\":" + id + "," +
+                "\"pais\":\"Brasil\"," +
+                "\"cpf\":\"999.999.999-99\"," +
+                "\"passaporte\":\"998998998\"," +
                 "\"nome\":\"" + randomWord + "\"," +
-                "\"valor\":\"135,00\"}";
+                "\"datanascimento\":\"Brasil\"," +
+                "\"telefone\":\"55-48-98888.8888\"," +
+                "\"email\":\"email@host.com.br\"}";
 
         Assert.assertTrue(response.getBody() != null && response.getBody().contains(resp));
 
     }
 
+    @Test
+    public void pesquisa_Cliente_Por_Id_SucessoTest() {
 
-    private String cadastrandoItemSucesso(String randomWord) {
+        String randomWord = geraPalavraRandomica(8);
+        String id = cadastrandoClienteSucesso(randomWord);
+        Assert.assertNotEquals("Falha", id);
 
-        String url = "http://localhost:" + port + "/item";
+        String url = "http://localhost:" + port + "/cliente/" + id;
 
-        String requestBody = "{\"nome\":\"" + randomWord + "\"," +
-                "\"valor\":\"135,00\"}";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+
+
+        String resp = "{\"id\":" + id + "," +
+                "\"pais\":\"Brasil\"," +
+                "\"cpf\":\"999.999.999-99\"," +
+                "\"passaporte\":\"998998998\"," +
+                "\"nome\":\"" + randomWord + "\"," +
+                "\"datanascimento\":\"Brasil\"," +
+                "\"telefone\":\"55-48-98888.8888\"," +
+                "\"email\":\"email@host.com.br\"}";
+
+        Assert.assertTrue(response.getBody() != null && response.getBody().contains(resp));
+
+    }
+
+    private String cadastrandoClienteSucesso(String randomWord) {
+
+        String url = "http://localhost:" + port + "/cliente";
+
+        String requestBody = "{\"pais\":\"Brasil\"," +
+                "\"cpf\":\"999.999.999-99\"," +
+                "\"passaporte\":\"998998998\"," +
+                "\"nome\":\"" + randomWord + "\"," +
+                "\"datanascimento\":\"Brasil\"," +
+                "\"telefone\":\"55-48-98888.8888\"," +
+                "\"email\":\"email@host.com.br\"}";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -144,7 +168,7 @@ class ItemTests {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(response.getBody());
 
-            String mensagem = jsonNode.get("Mensagem").asText();
+            String mensagem = jsonNode.get("Messagem").asText();
             String id = jsonNode.get("id").asText();
 
             Assert.assertEquals(mensagem, "Cliente CADASTRADO com sucesso.");

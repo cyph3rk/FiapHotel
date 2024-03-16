@@ -50,6 +50,19 @@ CREATE TABLE IF NOT EXISTS public.item
     PRIMARY KEY (id)
 );
 
+CREATE TABLE IF NOT EXISTS public.cliente
+(
+    id serial NOT NULL,
+    pais           text NOT NULL,
+    cpf            text NOT NULL,
+    passaporte     text NOT NULL,
+    nome           text NOT NULL,
+    datanascimento text NOT NULL,
+    telefone       text NOT NULL,
+    email          text NOT NULL,
+    PRIMARY KEY (id)
+);
+
 ALTER TABLE IF EXISTS public.predio
     ADD FOREIGN KEY (id_localidade)
     REFERENCES public.localidade (id) MATCH SIMPLE

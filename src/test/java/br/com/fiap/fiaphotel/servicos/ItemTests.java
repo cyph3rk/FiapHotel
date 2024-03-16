@@ -28,18 +28,18 @@ class ItemTests {
     @Test
     public void salva_Item_SucessoTest() {
         String randomWord = geraPalavraRandomica(8);
-        String id = cadastrandoServicoSucesso(randomWord);
+        String id = cadastrandoItemSucesso(randomWord);
         Assert.assertNotEquals("Falha", id);
     }
 
     @Test
-    public void altera_Servico_SucessoTest() {
+    public void altera_Item_SucessoTest() {
 
         String randomWord = geraPalavraRandomica(8);
-        String id = cadastrandoServicoSucesso(randomWord);
+        String id = cadastrandoItemSucesso(randomWord);
         Assert.assertNotEquals("Falha", id);
 
-        String url = "http://localhost:" + port + "/servicos/" + id;
+        String url = "http://localhost:" + port + "/item/" + id;
 
         String requestBody = "{\"nome\":\"" + randomWord + "\"," +
                 "\"valor\":\"200,00\"}";
@@ -58,13 +58,13 @@ class ItemTests {
     }
 
     @Test
-    public void deleta_Servico_SucessoTest() {
+    public void deleta_Item_SucessoTest() {
 
         String randomWord = geraPalavraRandomica(8);
-        String id = cadastrandoServicoSucesso(randomWord);
+        String id = cadastrandoItemSucesso(randomWord);
         Assert.assertNotEquals("Falha", id);
 
-        String url = "http://localhost:" + port + "/servicos/" + id;
+        String url = "http://localhost:" + port + "/item/" + id;
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -72,18 +72,18 @@ class ItemTests {
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, String.class);
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        Assert.assertTrue(response.getBody() != null && response.getBody().contains("{\"Mensagem\": \"Servicos DELETADA com sucesso.\"}"));
+        Assert.assertTrue(response.getBody() != null && response.getBody().contains("{\"Mensagem\": \"Itens DELETADA com sucesso.\"}"));
 
     }
 
     @Test
-    public void pesquisa_Servico_Por_Nome_SucessoTest() {
+    public void pesquisa_Item_Por_Nome_SucessoTest() {
 
         String randomWord = geraPalavraRandomica(8);
-        String id = cadastrandoServicoSucesso(randomWord);
+        String id = cadastrandoItemSucesso(randomWord);
         Assert.assertNotEquals("Falha", id);
 
-        String url = "http://localhost:" + port + "/servicos/nome/" + randomWord;
+        String url = "http://localhost:" + port + "/item/nome/" + randomWord;
 
 
         HttpHeaders headers = new HttpHeaders();
@@ -102,13 +102,13 @@ class ItemTests {
     }
 
     @Test
-    public void pesquisa_Servico_Por_Id_SucessoTest() {
+    public void pesquisa_Item_Por_Id_SucessoTest() {
 
         String randomWord = geraPalavraRandomica(8);
-        String id = cadastrandoServicoSucesso(randomWord);
+        String id = cadastrandoItemSucesso(randomWord);
         Assert.assertNotEquals("Falha", id);
 
-        String url = "http://localhost:" + port + "/servicos/" + id;
+        String url = "http://localhost:" + port + "/item/" + id;
 
 
         HttpHeaders headers = new HttpHeaders();
@@ -127,24 +127,9 @@ class ItemTests {
     }
 
 
+    private String cadastrandoItemSucesso(String randomWord) {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    private String cadastrandoServicoSucesso(String randomWord) {
-
-        String url = "http://localhost:" + port + "/servicos";
+        String url = "http://localhost:" + port + "/item";
 
         String requestBody = "{\"nome\":\"" + randomWord + "\"," +
                 "\"valor\":\"135,00\"}";
@@ -159,10 +144,10 @@ class ItemTests {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(response.getBody());
 
-            String mensagem = jsonNode.get("Messagem").asText();
+            String mensagem = jsonNode.get("Mensagem").asText();
             String id = jsonNode.get("id").asText();
 
-            Assert.assertEquals(mensagem, "Servicos CADASTRADA com sucesso.");
+            Assert.assertEquals(mensagem, "Itens CADASTRADA com sucesso.");
 
             return id;
 

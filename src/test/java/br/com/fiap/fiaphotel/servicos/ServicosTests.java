@@ -26,7 +26,7 @@ class ServicosTests {
     private TestRestTemplate restTemplate;
 
     @Test
-    public void salva_Item_SucessoTest() {
+    public void salva_Servico_SucessoTest() {
         String randomWord = geraPalavraRandomica(8);
         String id = cadastrandoServicoSucesso(randomWord);
         Assert.assertNotEquals("Falha", id);
@@ -125,22 +125,6 @@ class ServicosTests {
         Assert.assertTrue(response.getBody() != null && response.getBody().contains(resp));
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     private String cadastrandoServicoSucesso(String randomWord) {
 
